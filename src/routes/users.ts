@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import User from '../models/User';
 
+import Notification from '../models/Notification';
+
 const router = Router();
 
 // POST /api/users/sync - Sync Firebase user with MongoDB
@@ -28,6 +30,15 @@ router.post('/sync', async (req: Request, res: Response): Promise<any> => {
             },
             { upsert: true, new: true, setDefaultsOnInsert: true }
         );
+
+        if (isNewUser) {
+            await Notification.create({
+                uid,
+                title: 'Welcome to CloudLens!',
+                message: 'Thank you for joining. Explore your new Cloud Cost dashboard to start saving.',
+                type: 'welcome'
+            });
+        }
 
         return res.status(200).json({ message: 'User synced successfully', user });
     } catch (error: any) {

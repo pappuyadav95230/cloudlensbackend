@@ -17,11 +17,14 @@ const port = process.env.PORT || 8000;
 app.use(cors());
 app.use(express.json({ limit: '10mb' })); // Larger limit for Service Account JSON uploads
 
+import notificationsRouter from './routes/notifications';
+
 // Routes
 app.use('/api/settings', settingsRouter);
 app.use('/api/billing', billingRouter);
 app.use('/api/worker', syncRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/notifications', notificationsRouter);
 
 // Basic health check route
 app.get('/health', (req: Request, res: Response) => {
